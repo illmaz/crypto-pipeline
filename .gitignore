@@ -1,0 +1,5 @@
+venv/
+crypto.db
+crypto.db.wal
+prices.csv
+__pycache__/
