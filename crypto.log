@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/efe/crypto_pipeline/crypto.py", line 1, in <module>
-    import requests
-ModuleNotFoundError: No module named 'requests'
