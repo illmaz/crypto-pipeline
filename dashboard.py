@@ -1,22 +1,17 @@
 import streamlit as st
-import duckdb
+import requests
 import pandas as pd
 
+st.set_page_config(page_title="Crypto Dashboard", layout="wide")
+
 st.title("Crypto Price Dashboard")
+st.caption("Live prices from CoinGecko")
 
-conn = duckdb.connect("crypto.db", read_only=True)
-
-df = conn.execute("SELECT * FROM prices ORDER BY timestamp DESC").fetchdf()
-
-latest = df.iloc[0]
+url = "https://api.coingecko.com/api/v3/simple/price"
+params = {"ids": "bitcoin,ethereum,solana", "vs_currencies": "usd"}
+data = requests.get(url, params=params).json()
 
 col1, col2, col3 = st.columns(3)
-
-col1.metric("Bitcoin", f"${latest['bitcoin']:,.0f}")
-col2.metric("Ethereum", f"${latest['ethereum']:,.2f}")
-col3.metric("Solana", f"${latest['solana']:,.2f}")
-
-st.dataframe(df)
-
-st.subheader("Bitcoin Price Over Time")
-st.line_chart(df.set_index("timestamp")["bitcoin"])
+col1.metric("Bitcoin", f"${data['bitcoin']['usd']:,.0f}")
+col2.metric("Ethereum", f"${data['ethereum']['usd']:,.2f}")
+col3.metric("Solana", f"${data['solana']['usd']:,.2f}")
