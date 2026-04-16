@@ -1,15 +1,9 @@
 import streamlit as st
 import requests
+import pandas as pd
 from datetime import datetime
 
 st.set_page_config(page_title="Crypto Intelligence Dashboard", layout="wide")
-
-st.markdown("""
-    <style>
-    .main { padding: 2rem; }
-    .stMetric { background: #1a1a2e; padding: 1rem; border-radius: 10px; border: 1px solid #16213e; }
-    </style>
-""", unsafe_allow_html=True)
 
 st.title("Crypto Intelligence Dashboard")
 st.caption(f"Live market data • Updated {datetime.now().strftime('%H:%M:%S')}")
@@ -23,19 +17,19 @@ params = {
 }
 data = requests.get(url, params=params).json()
 
-if "bitcoin" in data:
+if "bitcoin" in data and "ethereum" in data and "solana" in data:
+
     st.subheader("Market Overview")
     col1, col2, col3, col4, col5 = st.columns(5)
-
-    col1.metric("Bitcoin", f"${data['bitcoin']['usd']:,.0f}", 
+    col1.metric("Bitcoin", f"${data['bitcoin']['usd']:,.0f}",
         f"{data['bitcoin']['usd_24h_change']:.2f}%")
-    col2.metric("Ethereum", f"${data['ethereum']['usd']:,.0f}", 
+    col2.metric("Ethereum", f"${data['ethereum']['usd']:,.0f}",
         f"{data['ethereum']['usd_24h_change']:.2f}%")
-    col3.metric("Solana", f"${data['solana']['usd']:,.2f}", 
+    col3.metric("Solana", f"${data['solana']['usd']:,.2f}",
         f"{data['solana']['usd_24h_change']:.2f}%")
-    col4.metric("Cardano", f"${data['cardano']['usd']:,.4f}", 
+    col4.metric("Cardano", f"${data['cardano']['usd']:,.4f}",
         f"{data['cardano']['usd_24h_change']:.2f}%")
-    col5.metric("Chainlink", f"${data['chainlink']['usd']:,.2f}", 
+    col5.metric("Chainlink", f"${data['chainlink']['usd']:,.2f}",
         f"{data['chainlink']['usd_24h_change']:.2f}%")
 
     st.divider()
@@ -49,7 +43,6 @@ if "bitcoin" in data:
     st.divider()
 
     st.subheader("24h Performance")
-    import pandas as pd
     perf_data = {
         "Coin": ["Bitcoin", "Ethereum", "Solana", "Cardano", "Chainlink"],
         "Price (USD)": [
